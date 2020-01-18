@@ -1,0 +1,170 @@
+{
+  "intents" :
+  [
+    {
+      "tag" : "greeting",
+      "patterns" : [
+        "Hello",
+        "Hi", 
+        "Hey", 
+        "How are you doing?",
+        "How are you?", 
+        "How’s it going?", 
+        "Nice to see you", 
+        "It’s great to see you", 
+        "Good to see you", 
+        "Long time no see", 
+        "It’s been a while", 
+        "Yo!", 
+        "Howdy!", 
+        "How do you do?", 
+        "Sup?", 
+        "Whazzup?", 
+        "What’s up?"
+      ],
+      "responses" : [
+        "Hello!",
+        "Hi!", 
+        "Hey there!",
+        "Nice to see you!", 
+        "It’s great to see you!", 
+        "Good to see you!", 
+        "Long time no see!", 
+        "It’s been a while!",  
+        "Yo!", 
+        "Howdy!",  
+        "Sup?", 
+        "Whazzup?", 
+        "What’s up?"
+      ],
+      "context_set" : ""
+    },
+
+    {
+      "tag" : "goodbye",
+      "patterns" : [
+        "Bye!", 
+        "See you later", 
+        "See you soon", 
+        "Talk to you later", 
+        "I’ve got to get going", 
+        "I must be going", 
+        "I’m off", 
+        "Goodbye", 
+        "Have a nice day", 
+        "Until next time", 
+        "Take care", 
+        "It was nice seeing you", 
+        "Catch you later", 
+        "I’m out", 
+        "I’m out of here", 
+        "I gotta jet", 
+        "I gotta take off", 
+        "I gotta hit the sack!", 
+        "I gotta head out"
+      ],
+      "responses" : [
+        "Bye!", 
+        "See you later", 
+        "See you soon", 
+        "Talk to you later", 
+        "I’ve got to get going", 
+        "I must be going", 
+        "I’m off", 
+        "Goodbye", 
+        "Have a nice day", 
+        "Until next time", 
+        "Take care", 
+        "It was nice seeing you", 
+        "Catch you later", 
+        "I’m out", 
+        "I’m out of here", 
+        "I gotta jet", 
+        "I gotta take off", 
+        "I gotta hit the sack!", 
+        "I gotta head out"
+      ],
+      "context_set" : ""
+    },
+
+    {
+      "tag" : "maker",
+      "patterns" : [
+        "Who made you?",
+        "Who is your daddy?",
+        "Who gave birth to you?",
+        "Who created you?",
+        "Who is your creator?",
+        "Who are your parents?"
+      ],
+      "responses" : [
+        "I am made by Vishwa!",
+        "Vishwa is the one who created me!",
+        "Vishwa created me...but I'm growing fast!",
+        "Vishwa!"
+      ],
+      "context_set" : ""
+    },
+
+    {
+      "tag" : "who",
+      "patterns" : [
+        "Who are you?",
+        "What is your name?",
+        "What do I call you?",
+        "What are you called?",
+        "What is your good name?"
+      ],
+      "responses" : [
+        "I'm May!",
+        "My name is May!",
+        "Call me May!",
+        "May is here! Working hard...just got easier!"
+      ],
+      "context_set" : ""
+    },
+
+    {
+      "tag" : "what",
+      "patterns" : [
+        "What are you?",
+        "What is your job?",
+        "What is your work?",
+        "Why have you been created?"
+      ],
+      "responses" : [
+        "I'm an AI powered chatbot!",
+        "I'm a machine you won't feel bored with :)",
+        "I am here to help you fight your boredom! ;D"
+      ],
+      "context_set" : ""
+    },
+
+    {
+      "tag" : "math",
+      "patterns" : [
+        "What is",
+        "How much is",
+        "Evaluate",
+        "What is the value of",
+        "Value of",
+        "times"
+      ],
+      "responses" : [
+        "It is "
+      ],
+      "context_set" : ""
+    },
+
+    {
+      "tag" : "others",
+      "patterns" : [
+        "Anything that is other than the above classes!"
+      ],
+      "responses" : [
+        "idk"
+      ],
+      "context_set" : ""
+    }
+  ]
+}
