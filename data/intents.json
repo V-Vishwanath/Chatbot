@@ -36,14 +36,15 @@
         "Sup?", 
         "Whazzup?", 
         "What’s up?"
-      ],
-      "context_set" : ""
+      ]
     },
 
     {
       "tag" : "goodbye",
       "patterns" : [
-        "Bye!", 
+        "bye",
+        "exit",
+        "quit", 
         "See you later", 
         "See you soon", 
         "Talk to you later", 
@@ -83,8 +84,7 @@
         "I gotta take off", 
         "I gotta hit the sack!", 
         "I gotta head out"
-      ],
-      "context_set" : ""
+      ]
     },
 
     {
@@ -102,8 +102,7 @@
         "Vishwa is the one who created me!",
         "Vishwa created me...but I'm growing fast!",
         "Vishwa!"
-      ],
-      "context_set" : ""
+      ]
     },
 
     {
@@ -120,8 +119,7 @@
         "My name is May!",
         "Call me May!",
         "May is here! Working hard...just got easier!"
-      ],
-      "context_set" : ""
+      ]
     },
 
     {
@@ -136,8 +134,24 @@
         "I'm an AI powered chatbot!",
         "I'm a machine you won't feel bored with :)",
         "I am here to help you fight your boredom! ;D"
+      ]
+    },
+
+    {
+      "tag" : "work",
+      "patterns" : [
+        "what can you do",
+        "how should i use you",
+        "how can you help me",
+        "what are some things you can do",
+        "can you"
       ],
-      "context_set" : ""
+      "responses" : [
+        "I can monitor your timetable, your computer, and everything...only if you had programmed me for that!",
+        "Anything...just program me before that!",
+        "Talk to you...pick up responses from google...do basic math. Yeah! I can even mess with your computer!",
+        "Try something. If you don't get expected results, it means I can't do that!"
+      ]
     },
 
     {
@@ -149,22 +163,53 @@
         "What is the value of",
         "Value of",
         "times"
-      ],
-      "responses" : [
-        "It is "
-      ],
-      "context_set" : ""
+      ]
     },
 
     {
-      "tag" : "others",
+      "tag" : "friends",
       "patterns" : [
-        "Anything that is other than the above classes!"
+        "Who are your friends",
+        "Who is your friend",
+        "Do you have friends",
+        "Do you have pals",
+        "Who are your pals",
+        "Have you got a friend",
+        "Tell me some names of your friends",
+        "How many friends do you have",
+        "Will you be my pal",
+        "Will you be my friend",
+        "Will you be my buddy"
       ],
       "responses" : [
-        "idk"
-      ],
-      "context_set" : ""
+        "I have only 1 friend. I'm not allowed to make more! Sorry!",
+        "Vishwa is my only friend, rather, a friendly boss!",
+        "I'm a robot! I see you as a master, or a slave soon, if you know what I mean!"
+      ]
+    },
+
+    {
+      "tag" : "make-note",
+      "patterns" : [
+        "Take down a note",
+        "Make a note",
+        "note this down",
+        "note down",
+        "create a note",
+        "write down",
+        "save a note"
+      ]
+    },
+
+    {
+      "tag" : "get-note",
+      "patterns" : [
+        "what did you note down",
+        "what did i ask you to remember",
+        "show me my notes",
+        "get my notes",
+        "open my notes"
+      ]
     }
   ]
 }
