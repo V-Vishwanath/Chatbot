@@ -4,26 +4,52 @@ import json
 import random
 import pickle
 import tflearn
+import platform
 import numpy as np
 import pyttsx3 as tts
-import tensorflow as tf
 import webbrowser as wb
+import pyautogui as gui
+import tensorflow as tf
+from subprocess import Popen
 import speech_recognition as sr
 from nltk.stem.lancaster import LancasterStemmer
 
 
+dynamic_actions = [
+    'make-note',
+    'get-note',
+    'math'
+]
+
 class Chatbot:
     def __init__(self):
+
+        self.currdir = os.getcwd()
+        self.notes_dir = os.path.join(self.currdir, 'Notes')
+
+        self.OS = platform.system()
+        self.chrome_path = ''
+
         self.machine = tts.init()
-        voices = self.machine.getProperty('voices')
-        self.machine.setProperty('voice', voices[1].id)
+
+        if self.OS == 'Windows' :
+            voices = self.machine.getProperty('voices')
+            self.machine.setProperty('voice', voices[1].id)
+            chrome_path = 'C:\\Program Files (x86)\\Google\Chrome\\Application\\chrome.exe'
+        
+        else :
+            self.machine.setProperty('voice', 'english+f5')
+            self.machine.setProperty('rate', 180)
+            chrome_path = '/usr/bin/google-chrome-stable'
+
+        wb.register('chrome', None, wb.BackgroundBrowser(chrome_path))
 
         self.recognizer = sr.Recognizer()
 
         self.stemmer = LancasterStemmer()
-
-        chrome_path = 'C:\\Program Files (x86)\\Google\Chrome\\Application\\chrome.exe'
-        wb.register('chrome', None, wb.BackgroundBrowser(chrome_path))
+        
+        self.machine.say('Initializing!')
+        self.machine.runAndWait()
 
         with open('data/intents.json') as f:
             self.data = json.load(f)
@@ -86,7 +112,7 @@ class Chatbot:
             self.net = tflearn.regression(self.net)
 
             self.model = tflearn.DNN(self.net)
-            self.model.fit(self.training, self.output, n_epoch=2000, batch_size=8, show_metric=True)
+            self.model.fit(self.training, self.output, n_epoch=1000, batch_size=8, show_metric=True)
             self.model.save('data/model.tflearn')
 
             with open('data/data.pickle', 'wb') as f:
@@ -115,7 +141,7 @@ class Chatbot:
         try:
             return self.recognizer.recognize_google(audio)
         except:
-            return 'Seems like you are offline! Connect to the internet and try again!'
+            return ''
 
     def open_google(self, query):
         wb.get('chrome').open_new_tab('https://www.google.com/search?q=' + query.replace(' ', '+'))
@@ -133,61 +159,126 @@ class Chatbot:
 
         return np.array(bag)
 
+    def predict(self, user) :
+        results = self.model.predict([self.generate_word_bag(user)])
+        highest_probability = np.argmax(results)
+
+        return (results[0][highest_probability], self.classes[highest_probability])
+
+
+    def get_responses(self, tag) :
+        responses = []
+        for cls in self.data['intents']:
+            if cls['tag'] == tag:
+                responses = cls['responses']
+                break 
+
+        return responses
+
+    def speak(self, text) :
+        print(f'Bot : {text}')
+        self.machine.say(text)
+        self.machine.runAndWait()
+
+    # Action to perform
+    def make_note(self) :
+        self.speak('What do you like to call this note?')
+        name = self.get_audio() + '.txt'
+
+        name = os.path.join(self.notes_dir, name)
+
+        self.speak('Okay...What do you want me to note down?')
+
+        note = ''
+        while True :
+            note = self.get_audio()
+            if note != '' :
+                break
+
+        print(f'You : {note}')
+
+        with open(name, 'a') as f :
+            f.write(note + '\n')
+
+        while True :
+            self.speak('Is that it?')
+            done = self.get_audio().lower()
+            print(f'You : {done}')
+
+            if 'yeah' in done or 'yes' in done or 'that\'s it' in done :
+                break
+
+            self.speak('Okay! Go ahead!')
+
+            note = ''
+            while True :
+                note = self.get_audio()
+                if note != '' :
+                    break
+                
+            print(f'You : {note}')
+
+            with open(name, 'a') as f :
+                f.write(note + '\n')
+
+        self.speak('Done!')
+
+        if self.OS == 'Windows' :
+            Popen(['notepad.exe', name])
+        else :
+            Popen(['gedit', name], stdin=open(os.devnull, 'r'))
+
+
+    def get_note(self) :
+        self.speak('Which note would you like to open? Just say the number..')
+        notes = os.listdir(self.notes_dir)
+
+        for i in range(len(notes)) :
+            print(f'{i+1}) {notes[i]}')
+
+        note = self.get_audio()
+
+        try :
+            Popen(['gedit', os.path.join(self.notes_dir, notes[int(note)])], stdin=open(os.devnull, 'r'))
+            self.speak('Okay!')
+        except :
+            self.speak('Sorry! Couldn\'t get that!')
+
+
+    def perform_action(self, tag) :
+        if tag == 'make-note' :
+            self.make_note()
+
+        elif tag == 'get-note' :
+            self.get_note()
+
     def chat(self):
+        self.machine.say('Go ahead, I\'m listening!')
+        self.machine.runAndWait()
+        
         while True:
-            user = input('user : ')
+            user = self.get_audio()
 
-            results = self.model.predict([self.generate_word_bag(user)])
-            highest_probability = np.argmax(results)
+            if user == '' :
+                continue
 
-            confidence = results[0][highest_probability]
+            print(f'you : {user}')
+            confidence, tag = self.predict(user)
 
             if confidence > 0.9:
-                tag = self.classes[highest_probability]
-
-                if tag == 'math':
-                    user = user.lower()
-                    user = user.replace('times', '*')
-                    user = user.replace('plus', '+')
-                    user = user.replace('minus', '-')
-                    user = user.replace('by', '/')
-                    user = user.replace('mod', '%')
-                    user = user.replace('percent of', '/100*')
-
-                    for i in user:
-                        if i not in (
-                                '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '-', 'x', '/', '%', '*', '(',
-                                ')'):
-                            user = user.replace(i, '')
-
-                        elif i == 'x':
-                            user = user.replace(i, '*')
-
-                    ans = f'It is {eval(user)}!'
-
-                    print(ans)
-                    self.machine.say(ans)
-
+                if tag in dynamic_actions :
+                    self.perform_action(tag)
+                    
                 else:
-                    responses = []
-                    for cls in self.data['intents']:
-                        if cls['tag'] == tag:
-                            responses = cls['responses']
-
-                    ans = random.choice(responses)
-                    print(ans)
-                    self.machine.say(ans)
+                    ans = random.choice(self.get_responses(tag))
+                    self.speak(ans)
 
                     if tag == 'goodbye' :
-                        self.machine.runAndWait()
                         break
 
             else:
-                print('Sorry! Didn\'t get ya!...Looking in the internet!')
-                self.machine.say('Sorry! Didn\'t get ya!...Looking in the internet!')
+                self.speak('Sorry! Didn\'t get you! Looking in the internet!')
                 self.open_google(user)
-
-            self.machine.runAndWait()
 
 
 may = Chatbot()
